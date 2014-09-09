@@ -38,7 +38,7 @@ def search_images_in_google_with_text(search_text, ip_address):
 
 def get_image_from_url(image_url):
 	'''
-	Return a Pillow image objet form the imageUrl
+	Return a Pillow image object from the imageUrl
 	'''
 	image = None
 
@@ -67,7 +67,7 @@ def save_image_thumbnail(image,thumbnail_size,image_name,folder_name):
 	
 	try:
 		image_thumbnail = create_thumbnail(image,thumbnail_size)
-		image_thumbnail.save('%s/%s.jpg'%(folder_name,image_name), "JPEG")
+		image_thumbnail.save('%s/%s_thumb.jpg'%(folder_name,image_name), "JPEG")
 	except IOError as ex:
 		logging.error("cannot create thumbnail for "+ image)
 		logging.exception(ex)
