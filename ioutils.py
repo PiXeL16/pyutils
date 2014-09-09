@@ -1,5 +1,7 @@
 import os
 import io
+import unicodedata
+import re
 
 def check_or_create_folder(folder_name):
 	"""
@@ -10,11 +12,17 @@ def check_or_create_folder(folder_name):
    		 os.makedirs(folder_name)
 
 
-def slugify(value):
-    """
+def slugify_text(value):
+	"""
     Normalizes string, converts to lowercase, removes non-alpha characters,
     and converts spaces to hyphens.
     """
-    value = unicode(re.sub('[^\w\s-]', '', value).strip().lower())
-    value = unicode(re.sub('[-\s]+', '-', value))
-    return value
+	if not isinstance(value, unicode):
+		value = unicode(value)
+
+	slug=unicodedata.normalize('NFKD', value)
+	slug=slug.encode('ascii', 'ignore').lower()
+	slug = re.sub(r'[^a-z0-9]+', '-', slug).strip('-')
+	slug = re.sub(r'[-]+', '_', slug)
+
+	return slug
