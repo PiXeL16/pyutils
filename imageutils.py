@@ -1,9 +1,10 @@
 import requests
 import io
+import logging
 from PIL import Image
 import ioutils
 
-def search_images_in_google_with_text(search_text, ipaddress):
+def search_images_in_google_with_text(search_text, ip_address):
 	'''
 	Requires Request library
 	Search images in google using google image rest services
@@ -26,7 +27,7 @@ def search_images_in_google_with_text(search_text, ipaddress):
 	'''
 
 	url = 'https://ajax.googleapis.com/ajax/services/search/images'
-	params = {'v': '1.0', 'userip': ipaddress,'q':search_text}
+	params = {'v': '1.0', 'userip': ip_address,'q':search_text}
 
 	json_response = requests.get(url, params=params).json();
 	
@@ -62,11 +63,11 @@ def save_image_thumbnail(image,thumbnail_size,image_name,folder_name):
 	'''
 	creates a thumbnail for the image with the name and in the folder path
 	'''
-	check_or_create_folder(folder_name)
+	ioutils.check_or_create_folder(folder_name)
 	
 	try:
-		image_thumbnail = create_thumbnail(thumbnail_size)
-		image_thumbnail.save('%s/%s'%(folder_name,image_name), "JPEG")
+		image_thumbnail = create_thumbnail(image,thumbnail_size)
+		image_thumbnail.save('%s/%s.jpg'%(folder_name,image_name), "JPEG")
 	except IOError as ex:
 		logging.error("cannot create thumbnail for "+ image)
 		logging.exception(ex)
