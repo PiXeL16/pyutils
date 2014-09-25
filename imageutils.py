@@ -28,7 +28,7 @@ def search_images_in_google_with_text(search_text, ip_address):
 	'''
 
 	url = 'https://ajax.googleapis.com/ajax/services/search/images'
-	params = {'v': '1.0','imgsz':'xlarge|large','userip': ip_address,'q':search_text}
+	params = {'v': '1.0','imgsz':'xxlarge|xlarge|large','userip': ip_address,'q':search_text}
 
 	json_response = requests.get(url, params=params).json();
 	
@@ -49,8 +49,8 @@ def get_image_from_url(image_url):
 		image = Image.open(image_file)
 		
 	except IOError as ex:
-		logging.error("cannot get image from url "+ image_url)
-		logging.exception(ex)
+		logging.error("Error cannot get image from url "+ image_url)
+		
 	
 	return image
 
@@ -78,11 +78,13 @@ def save_image(image,image_name, folder_name):
 	ioutils.check_or_create_folder(folder_name)
 	try:
 		save_name = '%s.jpg'%(image_name)
-		image.save('%s/%s'%(folder_name,save_name), "JPEG")
+		path ='%s/%s'%(folder_name,save_name)
+		image.save(path, "JPEG")
 		return save_name
 	except IOError as ex:
-		logging.error("cannot save image "+ image)
-		logging.exception(ex)
+		logging.error("Error cannot save image %s"% image)
+		ioutils.delete_file(path)
+		
 
 def save_image_and_resize_down(image, size, image_name, folder_name):
 	"""
@@ -93,8 +95,8 @@ def save_image_and_resize_down(image, size, image_name, folder_name):
 		image_saved_name = save_image(resized_image, image_name, folder_name)
 		return image_saved_name
 	except IOError as ex:
-		logging.error("cannot save image for "+ image)
-		logging.exception(ex)
+		logging.error("Error cannot save image for %s"% image)
+		
 	
 def save_image_thumbnail(image,thumbnail_size,image_name,folder_name):
 	'''
@@ -105,8 +107,8 @@ def save_image_thumbnail(image,thumbnail_size,image_name,folder_name):
 		image_saved_name = save_image(image_thumbnail,image_name,folder_name)
 		return image_saved_name
 	except IOError as ex:
-		logging.error("cannot create thumbnail for "+ image)
-		logging.exception(ex)
+		logging.error("Error cannot create thumbnail for %s"% image)
+		
 
 def get_exif_field_from_image(image, exif_field):
 	"""
@@ -114,6 +116,5 @@ def get_exif_field_from_image(image, exif_field):
 	"""
 	exif_values = exif.getexif(image)
 	k = list(exif_values.keys())
-	print k
 	if exif_field in exif_values:
 		return exif_values[exif_field]

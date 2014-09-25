@@ -11,6 +11,9 @@ def check_or_create_folder(folder_name):
 	if not os.path.exists(folder_name):
    		 os.makedirs(folder_name)
 
+def delete_file(file_path):
+	if os.path.exists(file_path):
+		os.remove(file_path)
 
 def slugify_text(value):
 	"""
